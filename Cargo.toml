@@ -1,0 +1,12 @@
+[package]
+name = "horizon-mod-inventory-profiles"
+version = "1.0.0"
+edition = "2024"
+authors = ["CayMac"]
+license = "MIT"
+publish = false
+
+[lib]
+path = "mixins/inventory_profiles/runtime.rs"
+
+[dependencies]
