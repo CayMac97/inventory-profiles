@@ -61,10 +61,7 @@ pub(super) fn on_frame(game: &mut Game<'_>, elapsed: Duration) {
                 .filter(|(_, st)| st.item.as_ref() == target_id)
                 .max_by_key(|(_, st)| st.count)
             {
-                let item_name = {
-                    let names = |id: &str| game.pack.names.display_item(id);
-                    hover_name(&names, &best_stack)
-                };
+                let item_name = hover_name(&game.pack.names, &best_stack);
                 if game.tweak_click(best_slot, sel as i32, Input::Swap) {
                     m::push_toast(
                         format!("[Inventory Profiles] Auto-refilled {item_name}"),
@@ -84,10 +81,7 @@ pub(super) fn on_frame(game: &mut Game<'_>, elapsed: Duration) {
             let max_damage = game.items().get(&stack.item).map_or(0, |i| i.max_damage);
             if m::should_protect_tool(stack.damage, max_damage, s.tool_protection) {
                 let remaining = max_damage.saturating_sub(stack.damage);
-                let item_name = {
-                    let names = |id: &str| game.pack.names.display_item(id);
-                    hover_name(&names, stack)
-                };
+                let item_name = hover_name(&game.pack.names, stack);
                 // Look for an undamaged replacement of the same tool in 9..36 first, else an empty slot in 9..36
                 let replacement_slot = (9..36).find(|&slot| {
                     game.slot_view(slot).is_some_and(|cand| {
@@ -166,10 +160,9 @@ fn sort_slots_with_mode(game: &mut Game<'_>, slots: &[usize], sort_mode: u8) {
     }
     let views: Vec<Option<ItemStack>> = slots.iter().map(|&s| game.slot_view(s)).collect();
     let clicks = {
-        let names = |id: &str| game.pack.names.display_item(id);
         let rank = |stack: &ItemStack| {
             let order = game.creative_screen.order_of(stack).unwrap_or(usize::MAX);
-            let display = hover_name(&names, stack);
+            let display = hover_name(&game.pack.names, stack);
             m::compute_sort_rank(sort_mode, order, &display, &stack.item, stack.count)
         };
         let max = |stack: &ItemStack| game.max_stack(stack);
