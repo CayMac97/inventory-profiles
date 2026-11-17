@@ -1,4 +1,4 @@
-// Hook helper: tweaks::Game::sort_slots (cancellable HEAD)
+// Hook helper: extras::sorting::Game::sort_slots (cancellable HEAD)
 fn inventory_profiles_sort_slots(
     game: &mut crate::game::Game<'_>,
     slots: &[usize],
